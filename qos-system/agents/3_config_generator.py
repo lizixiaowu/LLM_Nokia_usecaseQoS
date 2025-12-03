@@ -37,14 +37,25 @@ class ConfigGenerationAgent(ADKA2ABaseAgent):
         {json.dumps(remediation_plan_dict, indent=2)}
 
         [Task]
-        Convert the above Remediation Plan into specific Cisco IOS CLI commands.
+        Convert the above Remediation Plan into a COMPLETE, EXECUTABLE Cisco IOS configuration block.
         
-        [Requirements]
-        1. Target Device Type: Cisco
-        2. Interface: Use the exact interface specified in the 'actions' section.
-        3. QoS Policy: Apply the policy name specified in 'new_qos_level' to the interface (outbound direction).
-        4. Syntax: Ensure commands are valid (e.g., 'configure terminal', 'interface ...', 'end', 'write memory').
-        5. Output: You MUST return a valid JSON object matching the CLIConfig schema.
+        [CRITICAL SYNTAX REQUIREMENTS]
+        1. Start with 'configure terminal'.
+        2. Enter the specific interface (e.g., if plan says 'interface_to_Router-C', you must infer or use a placeholder like 'GigabitEthernet1/0/2' if known, or keep the variable).
+        3. Apply the changes (ip route, etc.).
+        4. End with 'end'.
+        5. MUST include 'write memory' to save config.
+        
+        [Example Output]
+        configure terminal
+        interface GigabitEthernet1/0/2
+          no shutdown
+        exit
+        ip route 192.168.2.0 255.255.255.0 10.1.1.2
+        end
+        write memory
+        
+        Output valid JSON matching CLIConfig schema.
         """
 
         try:

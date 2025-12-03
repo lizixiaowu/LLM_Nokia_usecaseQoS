@@ -55,7 +55,7 @@ class ADKA2ABaseAgent(ABC):
         )
         print(f"[{self.agent_name}] Sending message to {receiver_card.name} at {receiver_card.endpoint}")
         try:
-            response = requests.post(receiver_card.endpoint, json=message.dict(), timeout=10)
+            response = requests.post(receiver_card.endpoint, json=message.dict(), timeout=60)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
